@@ -1,26 +1,41 @@
-import { useState } from "react"
-import { useDispatch } from "react-redux"
-import { addTodo } from "../Reducer/todosSlice"
+import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { addTodo } from "../Reducer/todosSlice";
 
-function AddTodoForm () {
-  const [title, setTitle] = useState("")
-  const dispatch = useDispatch()
-const handleAdd = () => {
-    if (title.trim() === "") return
-    dispatch(addTodo(title))
-    setTitle("")
-  }
+export default function AddTodoForm() {
+  const [text, setText] = useState("");
+  const [saving, setSaving] = useState(false);
+  const dispatch = useDispatch();
+
+  const submit = async (e) => {
+    e.preventDefault();
+    const title = text.trim();
+    if (!title) return;
+    try {
+      setSaving(true);
+      await dispatch(addTodo(title)).unwrap();
+      setText("");
+    } catch (err) {
+      console.error("Failed to add todo:", err);
+      alert("Could not add todo");
+    } finally {
+      setSaving(false);
+    }
+  };
 
   return (
-    <div>
+    <form onSubmit={submit} id="add-todo-form">
       <input
-        value={title}
-        onChange={(e) => setTitle(e.target.value)}
-        placeholder="Add a new task"
+        className="todo-input"
+        type="text"
+        placeholder="Add a task."
+        value={text}
+        onChange={(e) => setText(e.target.value)}
+        disabled={saving}
       />
-      <button onClick={handleAdd}>Add</button>
-    </div>
-  )
+      <button className="todo-btn" type="submit" disabled={saving}>
+        {saving ? "Saving..." : "I Got This!"}
+      </button>
+    </form>
+  );
 }
-
-export default AddTodoForm

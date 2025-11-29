@@ -1,14 +1,13 @@
-import { StrictMode } from 'react'
-import { createRoot } from 'react-dom/client'
-import './index.css'
-import App from './App.jsx'
+import React from "react";
+import ReactDOM from "react-dom/client";
+import App from "./App";
 import { Provider } from "react-redux";
-import { store } from "./Redux Store/store";
-
-createRoot(document.getElementById('root')).render(
-  <StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </StrictMode>,
-)
+import { store } from "./reduxStore/store";
+import "./CSS/main.css";
+import "./CSS/corner.css";
+// Legacy JS converted to React components (TimeDisplay + LegacyTodoApp)
+ReactDOM.createRoot(document.getElementById("root")).render(
+  <Provider store={store}>
+    <App />
+  </Provider>
+);
